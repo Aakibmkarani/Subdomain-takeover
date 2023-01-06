@@ -28,30 +28,30 @@ do
         do
                 echo 'enumerating:' $var
 
-                subfinder -silent -d $var > out1 
-                cat out1 >> subs1
+                subfinder -silent -d $var > /tmp/sub/out1 
+                cat /tmp/sub/out1 >> /tmp/sub/subs1
 
-
-                assetfinder -subs-only $var > out2 
-                cat out2 >> subs2
+                assetfinder -subs-only $var > /tmp/sub/out2 
+                cat /tmp/sub/out2  >> /tmp/sub/subs2
                 
-             	python3 /opt/Sublist3r/sublist3r.py -d $var -t 50 -b -o out4
-                cat out4 >> subs4
+             	python3 /opt/subdomain_takeover/Sublist3r/sublist3r.py -d $var -t 50 -b -o /tmp/sub/out3
+                cat /tmp/sub/out3 >> /tmp/sub/subs3
                 
-                findomain -t $var > out3
-                cat out3 >> subs3
+                findomain -t $var > /tmp/sub/out4
+                cat /tmp/sub/out4 >> /tmp/sub/subs4
 		
 		crt.sh $var 
-		cat /tmp/crt/domains.txt > out5
-		cat out5 >> subs5
-                rm out1 out2 out3 out4 out5
+		cat /opt/subdomain_takeover/crt/domains.txt > /tmp/sub/out5
+		cat /tmp/sub/out5 >> /tmp/sub/subs5
+                
+                rm /tmp/sub/out1 out2 out3 out4 out5
         done
 done < $1
 
-cat subs* > all_domains 
+cat /tmp/sub/subs* > all_domains 
 
-duplicut all_domains -t 4 -o all_subs
-rm subs1 subs2 subs3 subs4 subs5
+duplicut /tmp/sub/all_domains -t 4 -o all_subs
+rm /tmp/sub/subs1 subs2 subs3 subs4 subs5
 
 echo 'saved subdomains to all_subs'
 
@@ -63,6 +63,6 @@ echo 'CHECKING FOR SUBDOMAIN TAKEOVER...'
 
 subzy -targets live_subs -hide_fails > subz_result.txt
 
-python3 /opt/subdover/subdovr.py -l live_subs -skip -o subdover_result.txt
+python3 /opt/subdomain_takeover/subdover/subdovr.py -l live_subs -skip -o /tmp/sub/subdover_result.txt
 
 echo 'DONE'
